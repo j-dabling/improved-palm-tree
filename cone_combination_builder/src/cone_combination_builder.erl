@@ -17,7 +17,7 @@ most_popular_combinations(Count,List)->
 
 -ifdef(EUNIT).
 %%
-%% Unit tests go here. 
+%% Unit tests go here.
 %%
 
 -include_lib("eunit/include/eunit.hrl").
@@ -28,7 +28,7 @@ most_popular_combinations(Count,List)->
 
 
 
-	
+
 
 %%The tests start here.
 cone_combinations_two_list_test_() ->

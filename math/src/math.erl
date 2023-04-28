@@ -5,14 +5,15 @@
 %%
 %%The factorial function
 %%
-fac(N) -> fail;
+fac(0) -> 1;
+fac(N) -> N * fac(N-1).
 
 -ifdef(EUNIT).
 -include_lib("eunit/include/eunit.hrl").
 
 fac_test_() ->
       [
-       ?_assertEqual(0,fac(0)),
+       ?_assertEqual(1,fac(0)),
        ?_assertEqual(1,fac(1)),
        ?_assertEqual(2,fac(2)),
        ?_assertEqual(6,fac(3)),

@@ -53,6 +53,8 @@ add_test_() ->
 divide_test_() ->
 	[?_assertEqual(2.0,divide(10,5)),%happy path
 	 %nasty thoughts start here
+
+	 ?_assertEqual(3.0,divide(3,1)),
 	 ?_assertEqual(0.75,divide(3,4)),
 	 ?_assert(3.5714285713 =< divide(1.25,0.35)),%the check can be broken up into two checks instead of using and
 	 ?_assert(3.5714285715 >= divide(1.25,0.35)),
@@ -64,6 +66,8 @@ divide_test_() ->
 lower_divide_test_() ->
 	[?_assertEqual(2,lower_divide(10,5)),%happy path
 	 %nasty thoughts start here
+
+	 ?_assertEqual(10,lower_divide(10,1)),
 	 ?_assertEqual(-2,lower_divide(-10,5)),
 	 ?_assertEqual(-2,lower_divide(10,-5)),
 	 ?_assertEqual(2,lower_divide(-10,-5)),
@@ -76,6 +80,9 @@ lower_divide_test_() ->
 remainder_test_()->
 	[?_assertEqual(0,remainder(10,5)),%happy path
 	 %nasty thoughts start here
+
+	 ?_assertEqual(0,remainder(5,1)),
+	 ?_assertEqual(1,remainder(5,2)),
 	 ?_assertEqual(5,remainder(5,10)),
 	 ?_assertEqual(-5,remainder(-5,10)),
 	 ?_assertEqual(-5,remainder(-5,-10)),

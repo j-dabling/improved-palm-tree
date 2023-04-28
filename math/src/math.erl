@@ -6,7 +6,7 @@
 %%The factorial function
 %%
 fac(0) -> 1;
-fac(N) -> N * fac(N-1).
+fac(N) -> N * fac(N - 1).
 
 -ifdef(EUNIT).
 -include_lib("eunit/include/eunit.hrl").

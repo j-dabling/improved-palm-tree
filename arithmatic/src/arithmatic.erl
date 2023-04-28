@@ -3,8 +3,8 @@
 	start_divider/0,factorializer/0,adder/0,subtracter/0,multiplier/0,divider/0,
 		 factorial_of/2,add/3,subtract/3]).
 
-%%
-%% Put your functions, described in the task HTML file here.
+%% Included from the template.
+%% Spawns PIDs for each of the operations.
 start_factorializer() ->
 	spawn(?MODULE,factorializer,[]).
 start_adder() ->
@@ -16,6 +16,7 @@ start_multiplier() ->
 start_divider() ->
 	spawn(?MODULE,divider,[]).
 
+%% Sending the numbers for each operation as messages to the PID.
 factorial_of(Fac_Pid, Fac) -> 
 	Fac_Pid ! {self(), Fac},
 	receive
@@ -51,6 +52,7 @@ divide(Div_Pid, Divisor1, Dividend2) ->
 			Response 
 	end.
 
+%% Recieves the messages and performs the operation.
 factorializer()->
 	receive
 		{Pid,Fac} when Fac < 0 -> Pid ! {fail,Fac,is_negative};

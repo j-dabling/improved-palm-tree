@@ -1,16 +1,107 @@
 -module(arithmatic).
--export([start_factorializer/0,start_adder/0,start_subtracter/0,start_multiplier/0,start_divider/0,
-		 factorializer/0,adder/0,subtracter/0,multiplier/0,divider/0,
+-export([start_factorializer/0,start_adder/0,start_subtracter/0,start_multiplier/0,
+	start_divider/0,factorializer/0,adder/0,subtracter/0,multiplier/0,divider/0,
 		 factorial_of/2,add/3,subtract/3]).
 
-%%
-%% Put your functions, described in the task HTML file here.
-%%
+%% Included from the template.
+%% Spawns PIDs for each of the operations.
+start_factorializer() ->
+	spawn(?MODULE,factorializer,[]).
+start_adder() ->
+	spawn(?MODULE,adder,[]).
+start_subtracter() ->
+	spawn(?MODULE,subtracter,[]).
+start_multiplier() ->
+	spawn(?MODULE,multiplier,[]).
+start_divider() ->
+	spawn(?MODULE,divider,[]).
 
+%% Sending the numbers for each operation as messages to the PID.
+factorial_of(Fac_Pid, Fac) -> 
+	Fac_Pid ! {self(), Fac},
+	receive
+		Response ->
+			Response 
+		end.
+
+add(Add_Pid, Add1, Add2) -> 
+	Add_Pid ! {self(),Add1, Add2},
+	receive
+		Response ->
+			Response 
+	end.
+
+subtract(Sub_Pid, Sub1, Sub2) -> 
+	Sub_Pid ! {self(),Sub1, Sub2},
+	receive
+		Response ->
+			Response 
+	end.
+
+multiply(Mult_Pid, Mult1, Mult2) -> 
+	Mult_Pid ! {self(),Mult1, Mult2},
+	receive
+		Response ->
+			Response 
+	end.
+
+divide(Div_Pid, Divisor1, Dividend2) -> 
+	Div_Pid ! {self(),Divisor1, Dividend2},
+	receive
+		Response ->
+			Response 
+	end.
+
+%% Recieves the messages and performs the operation.
+factorializer()->
+	receive
+		{Pid,Fac} when Fac < 0 -> Pid ! {fail,Fac,is_negative};
+		{Pid,Fac} when (is_integer(Fac) == false) -> Pid ! {fail,Fac,is_not_integer};
+		{Pid,Fac} when Fac == 0 -> Pid ! 1;
+		{Pid,Fac} -> Pid ! lists:foldl(fun(X,Accumul) -> Accumul * X end, 1, lists:seq(1,Fac))
+	end,
+	factorializer().
+	
+
+adder()->
+	receive
+		{Pid,Num1,Num2} when is_integer(Num1) and is_integer(Num2) -> Pid ! Num1 + Num2;
+		{Pid,Num1,Num2} when is_float(Num1) and is_float(Num2) ->Pid ! Num1 + Num2;
+		{Pid,Num1,_Num2} when is_integer(Num1) == false -> Pid ! {fail, Num1, is_not_number};
+		{Pid,_Num1,Num2} when is_integer(Num2) == false -> Pid ! {fail, Num2, is_not_number}	
+	end,
+	adder().
+
+subtracter()->
+	receive
+		{Pid,Num1,Num2} when is_integer(Num1) and is_integer(Num2) -> Pid ! Num1 - Num2;
+		{Pid,Num1,Num2} when is_float(Num1) and is_float(Num2) ->Pid ! Num1 - Num2;
+		{Pid,Num1,_Num2} when is_integer(Num1) == false -> Pid ! {fail, Num1, is_not_number};
+		{Pid,_Num1,Num2} when is_integer(Num2) == false -> Pid ! {fail, Num2, is_not_number}
+	end,
+	subtracter().
+
+multiplier()->
+	receive
+		{Pid,Num1,Num2} when is_integer(Num1) and is_integer(Num2) -> Pid ! Num1 * Num2;
+		{Pid,Num1,Num2} when is_float(Num1) and is_float(Num2) ->Pid ! Num1 * Num2;
+		{Pid,Num1,_Num2} when is_integer(Num1) == false -> Pid ! {fail, Num1, is_not_number};
+		{Pid,_Num1,Num2} when is_integer(Num2) == false -> Pid ! {fail, Num2, is_not_number}
+	end,
+	multiplier().
+
+divider()->
+	receive
+		{Pid,Num1,Num2} when is_integer(Num1) and is_integer(Num2) -> Pid ! Num1 / Num2;
+		{Pid,Num1,Num2} when is_float(Num1) and is_float(Num2) ->Pid ! Num1 / Num2;
+		{Pid,Num1,_Num2} when is_integer(Num1) == false -> Pid ! {fail, Num1, is_not_number};
+		{Pid,_Num1,Num2} when is_integer(Num2) == false -> Pid ! {fail, Num2, is_not_number}
+	end,
+	divider().
 
 -ifdef(EUNIT).
 %%
-%% Unit tests go here.
+%% Unit tests go here. 
 %%
 
 -include_lib("eunit/include/eunit.hrl").
@@ -19,7 +110,7 @@
 factorializer_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,factorializer,[]),
+			Pid = spawn(?MODULE,factorializer,[]),	
 			register(test_factorializer,Pid)
 		end,
 	%fun(_)->%runs after all of the tests
@@ -38,7 +129,7 @@ factorializer_test_() ->
 adder_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,adder,[]),
+			Pid = spawn(?MODULE,adder,[]),	
 			register(test_adder,Pid)
 		end,
 	%fun(_)->%runs after all of the tests
@@ -60,7 +151,7 @@ adder_test_() ->
 subtracter_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,subtracter,[]),
+			Pid = spawn(?MODULE,subtracter,[]),	
 			register(test_subtracter,Pid)
 		end,
 	%fun(_)->%runs after all of the tests
@@ -82,7 +173,7 @@ subtracter_test_() ->
 multiplier_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,multiplier,[]),
+			Pid = spawn(?MODULE,multiplier,[]),	
 			register(test_multiplier,Pid)
 		end,
 	%fun(_)->%runs after all of the tests
@@ -104,7 +195,7 @@ multiplier_test_() ->
 divider_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,divider,[]),
+			Pid = spawn(?MODULE,divider,[]),	
 			register(test_divider,Pid)
 		end,
 	%fun(_)->%runs after all of the tests

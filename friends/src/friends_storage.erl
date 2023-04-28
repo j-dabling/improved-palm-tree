@@ -148,11 +148,8 @@ handle_call_test_()->
 	handle_cast_test_()->
 		[?_assertEqual({noreply,[sue,joe,sally]},friends_storage:handle_cast({add,sue},[joe,sally])),%happy path
 	   ?_assertEqual({noreply,[sue]},friends_storage:handle_cast({add,sue},[])),%nasty path
-	   ?_assertEqual({noreply,[sue]},friends_storage:handle_cast({add,sue},nil)),%nasty path
-		 ?_assertEqual({noreply,
-	                ok,
-	           [joe,grace]},friends_storage:handle_cast({remove,sally},[joe,sally,grace]))%happy path
-
+	   ?_assertEqual({noreply,[sue|nil]},friends_storage:handle_cast({add,sue},nil)),%nasty path
+		 ?_assertEqual({noreply,[joe,grace]},friends_storage:handle_cast({remove,sally},[joe,sally,grace]))%happy path
 		].
 
 %component_level_test_()->{

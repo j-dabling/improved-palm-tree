@@ -46,19 +46,19 @@ has_friends([First|Rest], Friend_list)->
 %%---------------------------
 
 run(Friend_list)->
+	%complete this function.
 	receive
-		% {Pid, {command, data}}-> do_stuff
-		{Pid, {add, Data}}-> add(Data, Friend_list), Pid ! received;
-		{Pid, {remove, Data}}-> remove(Data, Friend_list), Pid ! received;
-		{Pid, {has_friend, Friend}}-> Pid ! has_friend(Friend, Friend_list);
-        % {Pid, {has_friend, Friend}}-> Pid ! true;
-		{Pid, {has_friends, List}}-> Pid ! has_friends(List, Friend_list);
-        {Pid, get}-> Pid ! Friend_list;
-        {Pid,_ } -> Pid ! {fail, unrecognized_message}
-		% {Pid, {command, data}}-> do_stuff
+		{Pid,{add,Friend}} -> [Friend || Friend_list],
+			Pid ! received;
+		{Pid,{has_friend,Friend}} -> Pid ! lists:member(Friend,Friend_list);
+		{Pid,{has_friends,Friends}} -> Map_List = lists:map(fun(X) -> lists:member(X, Friend_list) end,Friends),
+		Pid ! lists:foldl(fun(X,_) -> X == true end,true,Map_List);
+		{Pid,{remove,_Friend}} -> Pid ! received;
+		{Pid,get} -> Pid ! Friend_list;
+		{Pid,_} -> Pid ! {fail,unrecognized_message}
+		
 	end,
 	run(Friend_list).
-
 -ifdef(EUNIT).
 %%
 %% Unit tests go here.

@@ -1,23 +1,33 @@
 -module(cone_combination_builder).
 -export([cone_combinations/2,cone_combinations/1,most_popular_combinations/2]).
 
-
+cone_combinations(nil, nil) ->
+	fail;
+cone_combinations([],nil) ->
+	[];
+cone_combinations(nil,[]) ->
+	fail;
 cone_combinations(Top_flavors,Bottom_flavors) ->
-	to_do.
-
+	[{Top, Bottom} || Top <- Top_flavors, Bottom <- Bottom_flavors]. 
 
 cone_combinations(Flavor_list)->
-	to_do.
+	cone_combinations(Flavor_list,Flavor_list).
 
-
+most_popular_combinations(_,[]) -> fail;
+most_popular_combinations(Count,List) when Count > length(List) -> fail;
+most_popular_combinations(Count,_) when Count < 0 -> fail; 
 most_popular_combinations(Count,List)->
-	to_do.
+	Sort_List = lists:sort(List),
+	{Top_10,_} = lists:split(Count,Sort_List),
+	Top_10.
+
+
 
 
 
 -ifdef(EUNIT).
 %%
-%% Unit tests go here.
+%% Unit tests go here. 
 %%
 
 -include_lib("eunit/include/eunit.hrl").
@@ -28,7 +38,7 @@ most_popular_combinations(Count,List)->
 
 
 
-
+	
 
 %%The tests start here.
 cone_combinations_two_list_test_() ->

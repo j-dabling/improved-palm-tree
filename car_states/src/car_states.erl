@@ -97,6 +97,11 @@ init(Worker_ids) ->
     %% Set the initial state to be the list of available Worker_ids
     %% and types.
     {ok,ready,Worker_ids}.
+
+% init(Worker_ids) ->
+%     %% Set the initial state to be the list of available Worker_ids
+%     %% and types.
+%     {ok,{off, center, open, down},[]}.
 %% @private
 callback_mode() -> handle_event_function.
 
@@ -108,13 +113,16 @@ callback_mode() -> handle_event_function.
 %% @private
 handle_event({call,From}, next, ready,{Statem_name,State_data}) ->
     %Modify the state data and replace State_data below with the modified state data.
-    {next_state, ready,{Statem_name,State_data},[{reply,From,Statem_name}]}.
+    {next_state, ready,{Statem_name,State_data},[{reply,From,Statem_name}]};
 
-
+handle_event({call,From},to_on,off,{Statem_name,State_data}) ->
+    {}
 %% This code is included in the compiled code only if 
 %% 'rebar3 eunit' is being executed.
 -ifdef(EUNIT).
 %%
 %% Unit tests go here. 
 %%
+
+
 -endif.

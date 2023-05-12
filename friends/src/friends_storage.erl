@@ -152,7 +152,7 @@ handle_call_test_()->
 		 ?_assertEqual({noreply,[joe,grace]},friends_storage:handle_cast({remove,sally},[joe,sally,grace]))%happy path
 		].
 
-%component_level_test_()->{
+% component_level_test_()->{
 %  setup,
 %  fun()->gen_server:start_link({local, ?SERVER}, ?MODULE, [], []) end,
 %  fun()->gen_server:call(?SERVER, stop) end,
